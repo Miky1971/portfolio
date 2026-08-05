@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+<head>
+    <meta charset="utf-8">
+    <title>Generyczny Parser Danych</title>
+    <link rel="stylesheet" type="text/css" href="portfolio.css">
+    <link rel="shortcut icon" type="image/png" href="favicon4.png">
+</head>
+<body style="font-size:25px;margin-right:100px;margin-left:100px;">
+    <h1 style="text-align:center;">Generyczny Parser Danych</h1>
+	
+	
+	Endpoint HTTP w technologii ASP.NET Core Web API / Minimal APIs, który przyjmuje ustandaryzowany ladunek (payload) w formacie JSON, dekoduje i przetwarza przeslane dane, 
+	a nastepnie zwraca wynik w ujednoliconej formie (JSON).
+	
+	<ul>
+	<li>Technologia: C# .NET</li>
+	<li>Metoda i ścieżka: POST /api/v1/parse-content</li>
+	<li>Format wejściowy: naglówek Content-Type: application/json</li>
+	<li>Payload:
+	{
+		<b>"type"</b>: "CSV" | "INTERNAL_JSON",
+		<b>"content"</b>: "..."
+	}
+	</li>
+    <li><b>type</b> - format zawartosci w polu content</li>
+    <li><b>content</b> - surowe dane zakodowane algorytmem Base64.</li>
+	</ul>
+
+	
+	<h3>Pobierz:</h3>
+	<a href="https://github.com/Miky1971/generyczny_parser_danych.git">GitHub</a>
+	
+	
+	<h3>Uruchomienie w terminalu:</h3>
+	<blockquote>dotnet run</blockquote>
+	
+	Serwer (Kestrel) wystartuje na porcie 5091 (zdefiniowanym w Properties/launchSettings.json, profil http) - dokładny adres pojawi się też w konsoli po <i>dotnet run</i>.
+
+<h3>Testowanie w drugim terminalu:</h3>
+dla CSV (content: nazwa,wiek/nJan,30/nAnna,25):
+<blockquote>curl -X POST http://localhost:5091/api/v1/parse-content -H "Content-Type: application/json" -d "{"type":"CSV" "content":"bmF6d2Esd2llawpKYW4sMzAKQW5uYSwyNQ=="}"</blockquote>
+
+<p>lub JSON (content: {"nazwa":"Jan","wiek":30},{"nazwa":"Anna","wiek":25}): </p>
+<blockquote>curl -X POST http://localhost:5091/api/v1/parse-content -H "Content-Type: application/json" -d "{"type":"INTERNAL_JSON","content":"W3sibmF6d2EiOiJKYW4iLCJ3aWVrIjozMH0seyJuYXp3YSI6IkFubmEiLCJ3aWVrIjoyNX1d"}"</blockquote>
+
+<h3>Oczekiwana odpowiedź w obu przypadkach to JSON:</h3>
+<blockquote>{"status":"Success","qtyRows":2,"totalRows":2,"data":[{"nazwa":"Jan","wiek":"30"},{"nazwa":"Anna","wiek":"25"}]}</blockquote>
+<br>
+
+</body>
+</html>
